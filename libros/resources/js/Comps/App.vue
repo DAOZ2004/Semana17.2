@@ -100,7 +100,7 @@ export default {
 <style>
 body{
   margin:0;
-  background:#eef2f7;
+  background:#440101;
 }
 
 /* contenedor */
@@ -109,6 +109,7 @@ body{
   padding:40px;
   max-width:1200px;
   margin:auto;
+  color: white;
 }
 
 /* titulos */
@@ -143,7 +144,7 @@ input, select{
 }
 
 button{
-  background:#42b883;
+  background:#0c014e;
   color:white;
   border:none;
   padding:12px 25px;
@@ -154,7 +155,7 @@ button{
 }
 
 button:hover{
-  background:#36966d;
+  background:#633696;
 }
 
 /* cards libros */
@@ -166,7 +167,7 @@ button:hover{
 
 .card{
   width:260px;
-  background:white;
+  background:rgb(0, 0, 0);
   border-radius:12px;
   overflow:hidden;
   box-shadow:0 5px 15px rgba(0,0,0,0.1);
