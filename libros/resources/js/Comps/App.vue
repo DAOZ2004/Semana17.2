@@ -1,43 +1,34 @@
 <template>
   <div class="container">
-    <h1>Inventario de Librería</h1>
+    <h1>Librería</h1>
 
-    <!-- FORMULARIO -->
-    <div class="form-card">
-      <h2>Registrar Libro</h2>
+    <!-- FORM -->
+    <div class="form">
+      <h2>Registrar libro</h2>
 
-      <form @submit.prevent="saveBook">
-        <input v-model="form.name" placeholder="Nombre del libro" required>
-        <input v-model="form.author" placeholder="Autor" required>
-        <input v-model="form.editorial" placeholder="Editorial" required>
-        <input v-model="form.edition" placeholder="Edición" required>
+      <input v-model="form.nombre" placeholder="Nombre">
+      <input v-model="form.autor" placeholder="Autor">
+      <input v-model="form.editorial" placeholder="Editorial">
+      <input v-model="form.edicion" placeholder="Edición">
+      <input type="date" v-model="form.fecha_lanzamiento">
 
-        <label>Fecha de lanzamiento</label>
-        <input type="date" v-model="form.release_date" required>
+      <select v-model="form.categoria_id">
+        <option disabled value="">Seleccione categoría</option>
+        <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+          {{ cat.name }}
+        </option>
+      </select>
 
-        <!-- SELECT CATEGORIAS -->
-        <select v-model="form.category_id" required>
-          <option disabled value="">Seleccione categoría</option>
-          <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-            {{ cat.name }}
-          </option>
-        </select>
-
-        <!-- IMAGEN -->
-        <input type="file" @change="handleImage" required>
-
-        <button type="submit">Guardar libro</button>
-      </form>
+      <input type="file" @change="handleImage">
+      <button @click="saveBook">Guardar libro</button>
     </div>
 
-    <!-- LISTA LIBROS -->
-    <h2>Libros registrados</h2>
+    <!-- LISTA -->
     <div class="books">
-      <div class="book-card" v-for="book in books" :key="book.id">
-        <img :src="'/storage/' + book.image">
+      <div class="card" v-for="book in books" :key="book.id">
+        <img :src="'/storage/' + book.image" width="120">
         <h3>{{ book.name }}</h3>
-        <p><b>Autor:</b> {{ book.author }}</p>
-        <p><b>Editorial:</b> {{ book.editorial }}</p>
+        <p>{{ book.author }}</p>
         <p><b>Categoría:</b> {{ book.category.name }}</p>
       </div>
     </div>
@@ -45,20 +36,19 @@
 </template>
 
 <script>
-import axios from "axios"
-
 export default {
+
   data(){
-    return{
-      books: [],
-      categories: [],
+    return {
+      books:[],
+      categories:[],
       form:{
-        name:"",
-        author:"",
-        editorial:"",
-        edition:"",
-        release_date:"",
-        category_id:"",
+        nombre:'',
+        autor:'',
+        editorial:'',
+        edicion:'',
+        fecha_lanzamiento:'',
+        categoria_id:'',
         image:null
       }
     }
@@ -70,13 +60,14 @@ export default {
   },
 
   methods:{
+
     async getBooks(){
-      const res = await axios.get("/api/books")
+      const res = await axios.get('/books')
       this.books = res.data
     },
 
     async getCategories(){
-      const res = await axios.get("/api/categories")
+      const res = await axios.get('/categories')
       this.categories = res.data
     },
 
@@ -85,70 +76,110 @@ export default {
     },
 
     async saveBook(){
-      let data = new FormData()
-      Object.keys(this.form).forEach(key=>{
-        data.append(key,this.form[key])
-      })
+      let formData = new FormData()
 
-      await axios.post("/api/books",data)
+      formData.append('nombre', this.form.nombre)
+      formData.append('autor', this.form.autor)
+      formData.append('editorial', this.form.editorial)
+      formData.append('edicion', this.form.edicion)
+      formData.append('fecha_lanzamiento', this.form.fecha_lanzamiento)
+      formData.append('categoria_id', this.form.categoria_id)
+      formData.append('image', this.form.image)
 
-      alert("Libro guardado 😄")
+      await axios.post('/books', formData)
+
+      alert('Libro guardado ✔️')
+
       this.getBooks()
     }
+
   }
 }
 </script>
 
 <style>
+body{
+  margin:0;
+  background:#eef2f7;
+}
+
+/* contenedor */
 .container{
-  max-width: 900px;
-  margin: auto;
-  font-family: Arial;
+  font-family: Arial, Helvetica;
+  padding:40px;
+  max-width:1200px;
+  margin:auto;
 }
 
-h1{
-  text-align: center;
-  margin: 20px;
+/* titulos */
+.title{
+  text-align:center;
+  margin-bottom:30px;
 }
 
+.subtitle{
+  margin-top:40px;
+}
+
+/* formulario */
 .form-card{
-  background: #f4f4f4;
-  padding: 20px;
-  border-radius: 10px;
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-bottom:15px;
 }
 
 input, select{
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
+  padding:10px;
+  border-radius:6px;
+  border:1px solid #ccc;
 }
 
 button{
-  background: #2ecc71;
-  color: white;
-  border: none;
-  padding: 12px;
-  cursor: pointer;
-  width: 100%;
+  background:#42b883;
+  color:white;
+  border:none;
+  padding:12px 25px;
+  border-radius:8px;
+  font-size:16px;
+  cursor:pointer;
+  transition:0.3s;
 }
 
+button:hover{
+  background:#36966d;
+}
+
+/* cards libros */
 .books{
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 15px;
-  margin-top: 20px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:20px;
 }
 
-.book-card{
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 0 5px #ccc;
+.card{
+  width:260px;
+  background:white;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
-.book-card img{
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
+.card img{
+  width:100%;
+  height:260px;
+  object-fit:cover;
 }
+
+.info{
+  padding:15px;
+}
+
 </style>

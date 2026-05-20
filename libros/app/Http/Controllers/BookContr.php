@@ -14,25 +14,21 @@ class BookContr extends Controller
         return Book::with('category')->get();
     }
 
-    
     public function store(Request $request)
     {
-        $path = $request->file('image')->store('books','public');
+    // guardar imagen
+    $path = $request->file('image')->store('books','public');
 
-        return Book::create([
-            'name'=>$request->name,
-            'author'=>$request->author,
-            'editorial'=>$request->editorial,
-            'edition'=>$request->edition,
-            'release_date'=>$request->release_date,
-            'category_id'=>$request->category_id,
-            'image'=>$path
-        ]);
-    }
+    Book::create([
+        'name' => $request->nombre,
+        'author' => $request->autor,
+        'editorial' => $request->editorial,
+        'edition' => $request->edicion,
+        'release_date' => $request->fecha_lanzamiento,
+        'category_id' => $request->categoria_id,
+        'image' => $path
+    ]);
 
-    
-    public function categories()
-    {
-        return Category::all();
-    }
+    return response()->json(['message'=>'Libro creado correctamente']);
+  }
 }

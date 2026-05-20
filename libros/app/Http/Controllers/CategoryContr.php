@@ -7,13 +7,14 @@ use App\Models\Category;
 
 class CategoryContr extends Controller
 {
-     public function index()
+    public function index()
     {
-        return Category::all();
+        return Category::all(); // devolver JSON
     }
 
     public function store(Request $request)
     {
-        return Category::create($request->all());
+        Category::create($request->all());
+        return response()->json(['message'=>'Categoria creada']);
     }
 }

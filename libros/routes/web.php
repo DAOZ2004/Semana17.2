@@ -1,13 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BookContr;
+use App\Http\Controllers\CategoryContr;
 
 Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/books', [BookController::class,'index']);
-Route::post('/books', [BookController::class,'store']);
+// LIBROS
+Route::get('/books', [BookContr::class,'index']);
+Route::post('/books', [BookContr::class,'store']);
 
-Route::get('/categories', [BookController::class,'categories']);
-Route::post('/categories', [CategoryController::class,'store']);
+// CATEGORIAS
+Route::get('/categories', [CategoryContr::class,'index']);
+Route::post('/categories', [CategoryContr::class,'store']);

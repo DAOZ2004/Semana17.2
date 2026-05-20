@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>Librería</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite('resources/js/app.js')
 </head>
 <body>
